@@ -18,11 +18,8 @@ from sklearn.externals import joblib
 # typically __name__ when using a single module.
 app = Flask(__name__)
 
-# On charge les données
-#data_train = pd.read_csv("X_train.csv")
-#data_test = pd.read_csv("X_test.csv")
-
-model = joblib.load(gb_final_model.pkl)
+# model = joblib.load(gb_final_model.pkl)
+# model = mlflow.pyfunc.load_model("runs:/0a130dd1f0fa4ae7a84b625e06037ac4/model")
 
 @app.post('/predict')
 def predict(request):
