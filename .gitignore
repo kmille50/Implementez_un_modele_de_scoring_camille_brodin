@@ -9,3 +9,4 @@ gb_final_model.pkl
 X_train.csv
 X_test.csv
 y_train.csv
+mlflow_model

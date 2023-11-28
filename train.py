@@ -63,29 +63,32 @@ steps = [('preprocessor', preprocessor), ('over', SMOTE()),
 GradientBoosting_tuned = Pipeline(steps=steps)
 
 mlflow.start_run()
-run = mlflow.active_run()
   
 class ModelWrapper:
 
-    def __init__(self, model: Pipeline, threshold: float=0.25):
-        self.pipeline = Pipeline
-        self.threshold = 0.25
+    def __init__(self, pipeline, threshold):
+        self.pipe = pipeline
+        self.thresh = threshold
 
     def fit(self, X_train, y_train):
-        return self.pipeline.fit(X_train, y_train)
+        return self.pipe.fit(X_train, y_train)
 
     def predict(self, X) -> int:
-        proba = pd.DataFrame(self.pipeline.predict_proba(X))
-        y_pred = (proba >= seuil).astype("int")
+        proba = self.pipe.predict_proba(X)
+        y_pred = (proba >= threshold).astype("int")
         return y_pred
+
+   #def score(self, y_pred, y_test) -> float:
+   #     return bank_metric(y_pred, y_test)
+
  
-my_pipeline = ModelWrapper(model=GradientBoosting_tuned, threshold=0.25)
+my_pipeline = ModelWrapper(GradientBoosting_tuned, 0.25)
 joblib.dump(my_pipeline, 'gb_final_model.pkl')
 
 #from mlflow.models.signature import infer_signature
-#model = mlflow.pyfunc.load_model("runs:/2d8c6ace67f545eaae0a6b265dcbd010/model")
-#signature = model._model_meta._signature
-#mlflow.sklearn.save_model(my_pipeline, 'mlflow_model', signature=signature)
+model = mlflow.pyfunc.load_model("runs:/{run.info.run_id}/model")
+signature = model._model_meta._signature
+mlflow.sklearn.save_model(my_pipeline, 'mlflow_model', signature=signature)
 mlflow.end_run()
 
 #signature = infer_signature(X_train, my_pipeline.predict(X_train))
