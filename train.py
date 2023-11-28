@@ -2,7 +2,9 @@ import pandas as pd
 import numpy as np
 import json
 import joblib
-import ModelWrapper
+import os
+import mlflow
+mlflow.autolog()
 from flask import Flask, jsonify, request, jsonify, render_template
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.compose import ColumnTransformer
@@ -10,9 +12,9 @@ from imblearn.pipeline import Pipeline
 from imblearn.over_sampling import SMOTE
 from sklearn.preprocessing import TargetEncoder, OneHotEncoder, MinMaxScaler
 from sklearn.impute import SimpleImputer
+from sklearn.metrics import make_scorer, fbeta_score
 from sklearn import set_config
-import mlflow
-mlflow.autolog()
+from mlflow.models import infer_signature
 
 # On charge les données
 X_train = pd.read_csv("X_train.csv")
@@ -59,29 +61,36 @@ preprocessor = ColumnTransformer(
 steps = [('preprocessor', preprocessor), ('over', SMOTE()), 
           ('model',  GradientBoostingClassifier(learning_rate= 0.1, n_estimators= 50, random_state=1))]
 GradientBoosting_tuned = Pipeline(steps=steps)
+
+mlflow.start_run()
+run = mlflow.active_run()
   
 class ModelWrapper:
 
-    def __init__(self, model: Pipeline, threshold: float):
+    def __init__(self, model: Pipeline, threshold: float=0.25):
         self.pipeline = Pipeline
-        self.threshold = threshold
+        self.threshold = 0.25
 
     def fit(self, X_train, y_train):
         return self.pipeline.fit(X_train, y_train)
 
     def predict(self, X) -> int:
-        proba = self.pipeline.predict_proba(X)
-        result = 1 if proba > self.threshold else 0
-        return 0
-
-    # def score(self, y_pred, y_test) -> float:
-    #     return bank_metric(y_pred, y_test)
-    # def bank_metric(self, y_test, y_pred):
-    #     return fbeta_score(y_test, y_pred, beta=10)
-    #     bank_score = make_scorer(bank_metric, greater_is_better=True)
-
-my_pipeline = ModelWrapper(GradientBoosting_tuned)
+        proba = pd.DataFrame(self.pipeline.predict_proba(X))
+        y_pred = (proba >= seuil).astype("int")
+        return y_pred
+ 
+my_pipeline = ModelWrapper(model=GradientBoosting_tuned, threshold=0.25)
 joblib.dump(my_pipeline, 'gb_final_model.pkl')
 
-signature = my_pipeline._model_meta._signature
-model = mlflow.pyfunc.save_model(my_pipeline, 'gb_final_model', signature = signature)
+#from mlflow.models.signature import infer_signature
+#model = mlflow.pyfunc.load_model("runs:/2d8c6ace67f545eaae0a6b265dcbd010/model")
+#signature = model._model_meta._signature
+#mlflow.sklearn.save_model(my_pipeline, 'mlflow_model', signature=signature)
+mlflow.end_run()
+
+#signature = infer_signature(X_train, my_pipeline.predict(X_train))
+#mlflow.pyfunc.save_model(my_pipeline, 'gb_final_model_mlflow')
+#logged_model = 'runs:/2d8c6ace67f545eaae0a6b265dcbd010/model'
+
+# Load model.
+#loaded_model = mlflow.sklearn.load_model(logged_model)
