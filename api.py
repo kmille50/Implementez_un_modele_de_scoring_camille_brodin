@@ -23,7 +23,10 @@ mlflow.pyfunc.load_model("runs:/a13e39e874f447b49357cd9ce038968b/model")
 THRESHOLD = 0.25
 
 @app.post('/predict')
-def predict(request):
-    proba = self.pipeline.predict_proba(X)
+def predict():
+    params =request.params
+    df=pd.Series(params)
+    proba = model.predict_proba(df)
     result = 1 if proba > THRESHOLD else 0
-    return {'result': result}
+    record = {'result' : result}
+    return jsonify(record)

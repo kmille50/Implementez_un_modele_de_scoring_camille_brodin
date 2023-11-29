@@ -1,52 +1,29 @@
-import pandas as pd
 import streamlit as st
 import requests
 
-def request_prediction(model_uri, data):
-    headers = {"Content-Type": "application/json"}
-
-    data_json = {'data': data}
-    response = requests.request(
-        method='POST', headers=headers, url=model_uri, json=data_json)
-
-    if response.status_code != 200:
-        raise Exception(
-            "Request failed with status {}, {}".format(response.status_code, response.text))
-
-    return response.json()
-
+url = 'http://127.0.0.1:5000'
 
 def main():
-    MLFLOW_URI = 'http://127.0.0.1:5000'
-    #CORTEX_URI = 'http://0.0.0.0:8890/'
-    #RAY_SERVE_URI = 'http://127.0.0.1:8000/regressor'
-
-    api_choice = st.sidebar.selectbox(
-        'Quelle API souhaitez vous utiliser',
-        ['MLflow']) #'Cortex', 'Ray Serve'
-
-    st.title('Solvability Prediction')
+   
+    st.title('Prediction de solvabilité client')
 
     DAYS_BIRTH = st.number_input('Age de lindividu',
-                                 min_value=0., value=3.87, step=1.)
+                                 min_value=0., value=70., step=1.)
     
-    CODE_GENDER  = st.number_input('Sexe de lindividu',
-                              min_value=0., value=28., step=1.)
+    CODE_GENDER  = st.text_input('Sexe de lindividu',
+                              value=("Homme","Femme"))
 
     AMT_INCOME_TOTAL  = st.number_input('Revenu totaux',
-                              min_value=0., value=28., step=1.)
+                              min_value=0., value=4500000., step=500.)
 
     CNT_CHILDREN = st.number_input('Nombre denfant',
-                                   min_value=0., value=5., step=1.)
+                                   min_value=0., value=14., step=1.)
 
     OCCUPATION_TYPE = st.number_input('Type dactivite professionnelle',
                                      min_value=0., value=3., step=1.)
 
     DAYS_LAST_PHONE_CHANGE = st.number_input('Jours depuis le dernier changement de téléphone ',
-                                 min_value=0, value=1425, step=100)
-    
-    DAYS_EMPLOYED_PERCENT = st.number_input('Pourcentage de jour travaillé',
-                               min_value=0., value=35., step=1.)
+                                 min_value=0., value=1425, step=100)
 
     CREDIT_INCOME_PERCENT = st.number_input('Taux dendettement',
                                 min_value=0., value=-119., step=1.)
@@ -55,7 +32,7 @@ def main():
     
     if predict_btn:
         data = [[DAYS_BIRTH, CODE_GENDER, AMT_INCOME_TOTAL, CNT_CHILDREN,
-                 OCCUPATION_TYPE, DAYS_LAST_PHONE_CHANGE, DAYS_EMPLOYED_PERCENT, CREDIT_INCOME_PERCENT]]
+                 OCCUPATION_TYPE, DAYS_LAST_PHONE_CHANGE, CREDIT_INCOME_PERCENT]]
         pred = None
 
         if api_choice == 'MLflow':
