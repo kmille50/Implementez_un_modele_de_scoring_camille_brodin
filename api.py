@@ -10,25 +10,20 @@ from imblearn.over_sampling import SMOTE
 from sklearn.preprocessing import TargetEncoder, OneHotEncoder, MinMaxScaler
 from sklearn.impute import SimpleImputer
 import pickle
+import mlflow
 
 # Create an instance of the Flask class that is the WSGI application.
 # The first argument is the name of the application module or package,
 # typically __name__ when using a single module.
+
 app = Flask(__name__)
 
 model = joblib.load("gb_final_model.pkl")
-
-mlflow.pyfunc.load_model("runs:/30156d4bd7664cfb841858526d22009c/model")
+mlflow.pyfunc.load_model("runs:/a13e39e874f447b49357cd9ce038968b/model")
+THRESHOLD = 0.25
 
 @app.post('/predict')
 def predict(request):
-    
-    params = request.params
-    df = pd.Series(params)
-    result = model.predict(df)
-    record = {"result" : result}
-    return jsonify(record)
-
-
-# if __name__ == "__main__":
-#     app.run(host="localhost", port="5000", debug=True)
+    proba = self.pipeline.predict_proba(X)
+    result = 1 if proba > THRESHOLD else 0
+    return {'result': result}
