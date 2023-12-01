@@ -86,8 +86,9 @@ my_pipeline = ModelWrapper(GradientBoosting_tuned, 0.25)
 joblib.dump(my_pipeline, 'gb_final_model.pkl')
 
 #from mlflow.models.signature import infer_signature
-model = mlflow.pyfunc.load_model("runs:/{run.info.run_id}/model")
+model = mlflow.pyfunc.load_model("runs:/cc75ed32247d4124ad24aba20f2a951e/model")
 signature = model._model_meta._signature
+signature
 mlflow.sklearn.save_model(my_pipeline, 'mlflow_model', signature=signature)
 mlflow.end_run()
 

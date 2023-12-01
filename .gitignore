@@ -5,9 +5,11 @@ raw_data
 =======
 mlruns
 >>>>>>> 33946e08e75dc7299d159cfb70ebc156a60009b0
-gb_final_model.pkl
+GradientBoosting_tuned.joblib
 X_train.csv
 X_test.csv
 y_train.csv
 y_test.csv
 my_model
+new_test.py
+params.json

@@ -16,17 +16,31 @@ import mlflow
 # The first argument is the name of the application module or package,
 # typically __name__ when using a single module.
 
-app = Flask(__name__)
+app = flask.Flask(__name__)
+app.config["DEBUG"] = True
 
-model = joblib.load("gb_final_model.pkl")
-mlflow.pyfunc.load_model("runs:/a13e39e874f447b49357cd9ce038968b/model")
-THRESHOLD = 0.25
+model = joblib.load("GradientBoosting_tuned.joblib")
+model_labels = ['0','1']
 
-@app.post('/predict')
+@app.route('/predict', methods=['POST'])
 def predict():
-    params =request.params
-    df=pd.Series(params)
-    proba = model.predict_proba(df)
-    result = 1 if proba > THRESHOLD else 0
-    record = {'result' : result}
-    return jsonify(record)
+    # Retrieve query parameters related to this request.
+    DAYS_BIRTH = request.args.get('DAYS_BIRTH')
+    AMT_INCOME_TOTAL = request.args.get('AMT_INCOME_TOTAL')
+    CNT_CHILDREN = request.args.get('CNT_CHILDREN')
+    OCCUPATION_TYPE = request.args.get('OCCUPATION_TYPE')
+    CREDIT_INCOME_PERCENT = request.args.get('CREDIT_INCOME_PERCENT')
+
+    # Our model expects a list of records
+    features = [[DAYS_BIRTH, AMT_INCOME_TOTAL, CNT_CHILDREN, OCCUPATION_TYPE, CREDIT_INCOME_PERCENT]]
+    
+    # Use the model to predict the class
+    label_index = model.predict_proba(features)
+    # Retrieve the iris name that is associated with the predicted class
+    label = model_labels[label_index[0]]
+    # Create and send a response to the API caller
+    return jsonify(status='complete', label=label)
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
