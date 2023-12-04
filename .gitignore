@@ -13,3 +13,4 @@ y_test.csv
 my_model
 new_test.py
 params.json
+model.pkl
