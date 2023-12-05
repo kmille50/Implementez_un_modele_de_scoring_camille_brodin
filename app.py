@@ -1,45 +1,25 @@
 from flask import Flask, request, redirect
-from flask_restful import Resource, Api
-from flask_cors import CORS
 import os
-import prediction
+import jsonify
+#from prediction import predict_bank
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"*": {"origins": "*"}})
-api = Api(app)
 
-class Test(Resource):
-    def get(self):
-        return 'Welcome to, Test App API!'
+pkl_filename = "model.pkl"
+with open(pkl_filename, 'rb') as f_in:
+    model = pickle.load(f_in)
 
-    def post(self):
-        try:
-            value = request.get_json()
-            if(value):
-                return {'Post Values': value}, 201
+@app.post('/predict')
+def predict_bank(request):
+    ##loading the model from the saved file
 
-            return {"error":"Invalid format."}
-
-        except Exception as error:
-            return {'error': error}
-
-class GetPredictionOutput(Resource):
-    def get(self):
-        return {"error":"Invalid Method."}
-
-    def post(self):
-        try:
-            data = request.get_json()
-            predict = prediction.predict_mpg(data)
-            predictOutput = predict
-            return {'predict':predictOutput}
-
-        except Exception as error:
-            return {'error': error}
-
-api.add_resource(Test,'/')
-api.add_resource(GetPredictionOutput,'/getPredictionOutput')
+    params = request.params
+    df = pd.Series(params)
+    y_proba = model.predict_proba(df)[:, 1]
+    y_pred = (y_proba > 0.25).astype("int")
+    record = {'y_proba': y_proba, 'y_pred': y_pred}
+    
+    return jsonify(record)
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host="localhost", port="5000", debug=True)
