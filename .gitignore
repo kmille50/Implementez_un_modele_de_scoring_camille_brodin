@@ -18,3 +18,8 @@ app.py
 prediction.py
 dashboard.py
 train.ipynb
+X_tr.csv
+X_te.csv
+y_tr.csv
+y_te.csv
+__pycache__
