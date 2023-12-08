@@ -14,8 +14,8 @@ my_model
 new_test.py
 params.json
 model.pkl
-app.py
-prediction.py
+app_test.py
+prediction_test.py
 dashboard.py
 train.ipynb
 X_tr.csv
