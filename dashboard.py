@@ -5,7 +5,7 @@ import api
 import requests
 import json
 import numpy as np
-import plotly.figure_factory as ff
+import plotly.express as px
 
 url = "http://127.0.0.1:5000/predict"
 
@@ -19,25 +19,33 @@ with header:
        st.text("Dashboard interactif pour plus de transparence sur les décisions d'octroi de crédit, et mise à disposition des clients leurs informations personnelles avec exploration facilité.")
 
 with dataset:
-       st.header("Déja client ? Consultez vos données en toute transparence!")
+       st.header("Consultez vos données clients en toute transparence!")
        st.text("Ce dataset est disponible a cette adresse: https://www.kaggle.com/competitions/home-credit-default-risk/data")
        clients_data = pd.read_csv('X_tr.csv')     
        
        id = st.selectbox("Identifiant client:", clients_data['SK_ID_CURR'].unique())
        st.write(clients_data.loc[clients_data['SK_ID_CURR'] == id])
-       
-       st.subheader("Distribution des annuités de prêt")
-       annuite = pd.DataFrame(clients_data['CREDIT_INCOME_PERCENT'].value_counts()).head()
-       st.bar_chart(annuite)
-       
-       st.subheader("Distribution du type des contrats de crédit")
-       type_credit = pd.DataFrame(clients_data['TARGET'].value_counts()).head()
-       st.bar_chart(type_credit)
+
+       st.subheader("Informations descriptives relatives à un client et à l'ensemble des clients (métier/taux d'endettement).")
+
+       fig = px.scatter(
+       clients_data,
+       x="SK_ID_CURR",
+       y="OCCUPATION_TYPE",
+       color="CREDIT_INCOME_PERCENT",
+       color_continuous_scale="reds",
+       )
+
+       tab1, tab2 = st.tabs(["Streamlit theme (default)", "Plotly native theme"])
+       with tab1:
+              st.plotly_chart(fig, theme="streamlit", use_container_width=True)
+       with tab2:
+              st.plotly_chart(fig, theme=None, use_container_width=True)
        
        
 with model_training:
 
-       st.header('Vous réfléchissez à prendre un crédit ? Faites une simulation dès maintenant!')
+       st.header('Faites une simulation dès maintenant!')
        st.text("Ici vous pouvez tester des informations clients pour générer une prédiction de solvabilité:")        
        
        DAYS_BIRTH = st.number_input('DAYS_BIRTH', min_value=21., max_value=70., value=44., step=1.)
@@ -68,7 +76,7 @@ with model_training:
               st.session_state.prediction = response.json()
               
        
-       st.button('Click me', on_click=request_model)
+       st.button('Prédire', on_click=request_model)
 
        if st.session_state.prediction:
               st.write(st.session_state.prediction)

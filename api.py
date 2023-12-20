@@ -27,13 +27,8 @@ def predict():
     preds = (probas > 0.15).astype("int")
     proba = round(probas.values.tolist()[0][0]*100,2)
     pred = preds.values.tolist()[0][0] #numpyarray -> list et sélection premier element
-    response = {"proba" : proba, "pred" : pred} #dictionnaire python
+    response = {"Probabilité de défaut de remboursement (%)" : proba, "Crédit_accordé(0)_ou_refusé(1)" : pred} #dictionnaire python
     return jsonify(response) #dictionnaire-> http json
-
-    # if y_pred == 0:
-    #     print('Client solvable :', "la probabilité de faillite est de",y_proba*100, "%")
-    # elif y_pred == 1:
-    #     print('Client à risque :', "la probabilité de faillite est de",y_proba*100, "%")
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
