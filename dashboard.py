@@ -25,6 +25,23 @@ with dataset:
        
        id = st.selectbox("Identifiant client:", clients_data['SK_ID_CURR'].unique())
        st.write(clients_data.loc[clients_data['SK_ID_CURR'] == id].drop(columns = ["TARGET", "SK_ID_CURR"]))
+       
+       st.subheader("Informations descriptives relatives à un client et à l'ensemble des clients (jours travaillés/taux d'endettement).")
+
+       fig = px.scatter(
+       clients_data,
+       x="SK_ID_CURR",
+       y="DAYS_EMPLOYED",
+       color="CREDIT_INCOME_PERCENT",
+       color_continuous_scale="reds",
+       )
+
+       tab1, tab2 = st.tabs(["Streamlit theme (default)", "Plotly native theme"])
+       with tab1:
+              st.plotly_chart(fig, theme="streamlit", use_container_width=True)
+       with tab2:
+              st.plotly_chart(fig, theme=None, use_container_width=True)
+       
 
        st.subheader("Informations descriptives relatives à un client et à l'ensemble des clients (métier/taux d'endettement).")
 
