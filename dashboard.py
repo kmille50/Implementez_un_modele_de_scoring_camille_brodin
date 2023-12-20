@@ -7,7 +7,7 @@ import json
 import numpy as np
 import plotly.express as px
 
-url = "http://127.0.0.1:5000/predict"
+url = "http://127.0.0.1:8000/predict"
 
 header = st.container()
 dataset = st.container()
