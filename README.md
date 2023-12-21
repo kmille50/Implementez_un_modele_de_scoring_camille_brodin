@@ -26,7 +26,7 @@ Il nous est proposé d'utiliser un Notebook disponible sur le site de Kaggle pou
 
 ## Modèle de classification
 
-Le modèle retenu pour cet exercice est le modèle GradientBoosting. Le feature engineering étant sommaire, les résultats obtenus sont perfectible. 
+Le modèle retenu pour cet exercice est le modèle XGBoosting. Le feature engineering étant sommaire, les résultats obtenus sont perfectible. 
 
 ## Dashboard / API
 

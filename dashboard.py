@@ -24,7 +24,7 @@ with dataset:
        clients_data = pd.read_csv('X_tr.csv')     
        
        id = st.selectbox("Identifiant client:", clients_data['SK_ID_CURR'].unique())
-       st.write(clients_data.loc[clients_data['SK_ID_CURR'] == id].drop(columns = ["TARGET", "SK_ID_CURR"]))
+       st.write(clients_data.loc[clients_data['SK_ID_CURR'] == id])
        
        st.subheader("Informations descriptives relatives à un client et à l'ensemble des clients (jours travaillés/taux d'endettement).")
 

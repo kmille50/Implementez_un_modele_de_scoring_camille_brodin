@@ -24,7 +24,7 @@ def predict():
     data = request.json #json -> dictionnaire
     df = pd.Series(data).to_frame().T #dictionnaire -> series -> dataframe bonne orientation
     probas = pd.DataFrame(model.predict_proba(df)) #predict numpyarray -> dataframe
-    preds = (probas > 0.15).astype("int")
+    preds = (probas > 0.25).astype("int")
     proba = round(probas.values.tolist()[0][0]*100,2)
     pred = preds.values.tolist()[0][0] #numpyarray -> list et sélection premier element
     response = {"Probabilité de défaut de remboursement (%)" : proba, "Crédit_accordé(0)_ou_refusé(1)" : pred} #dictionnaire python
