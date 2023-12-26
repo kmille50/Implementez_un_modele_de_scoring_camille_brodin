@@ -24,3 +24,8 @@ y_tr.csv
 y_te.csv
 __pycache__
 config.toml
+test_unitaire
+.vscode
+.pytest_cache
+df.csv
+df_final.csv
