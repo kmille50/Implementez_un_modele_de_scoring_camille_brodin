@@ -22,9 +22,7 @@ X_tr.csv
 X_te.csv
 y_tr.csv
 y_te.csv
-__pycache__
 config.toml
-test_unitaire
 .vscode
 .pytest_cache
 df.csv
