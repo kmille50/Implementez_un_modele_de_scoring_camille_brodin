@@ -21,3 +21,4 @@ config.toml
 Projet7.code-workspace
 X_train.csv
 shap_local.csv
+__pycache__/api.cpython-311.pyc
