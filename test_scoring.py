@@ -15,7 +15,8 @@ import random
 
 y_train = pd.read_csv('y_train.csv')  
 df = pd.DataFrame()
-df['x'] = 0.24, 0.26
+df['x'] = 0.26, 0.26
+
     
 #test numéro 1 : métrique banquaire 
 def bank_metric(y_true, y_pred):
@@ -31,5 +32,5 @@ def transform_treshold(df, tresh):
     return new_df
 
 def test_transform_treshold():
-    assert transform_treshold(df[1], 0.25) == 1
+    assert transform_treshold(df['x'].iloc[1], 0.25) == 1
     
