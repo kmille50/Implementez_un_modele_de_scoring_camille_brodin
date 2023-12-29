@@ -16,7 +16,7 @@ import random
 X_train = pd.read_csv('X_train.csv') 
 y_train = pd.read_csv('y_train.csv')  
 df_indiv = pd.read_csv('df_indiv.csv') 
-df_global = pd.read_csv('test_global.csv')
+df_global = pd.read_csv('df_global.csv')
     
 #test numéro 1 : métrique banquaire 
 def bank_metric(y_true, y_pred):
