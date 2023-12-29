@@ -30,9 +30,9 @@ with dataset:
 
        fig = px.scatter(
        clients_data,
-       x="SK_ID_CURR",
+       x="TARGET",
        y="DAYS_EMPLOYED",
-       color="CREDIT_INCOME_PERCENT",
+       color="SK_ID_CURR",
        color_continuous_scale="reds",
        )
 

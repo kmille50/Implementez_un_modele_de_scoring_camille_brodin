@@ -5,9 +5,7 @@ raw_data
 =======
 mlruns
 >>>>>>> 33946e08e75dc7299d159cfb70ebc156a60009b0
-X_train.csv
 X_test.csv
-y_train.csv
 y_test.csv
 my_model
 model.pkl
@@ -20,5 +18,4 @@ y_te.csv
 config.toml
 .vscode
 .pytest_cache
-df.csv
-df_final.csv
+Projet7.code-workspace

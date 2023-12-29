@@ -15,8 +15,8 @@ import random
 
 X_train = pd.read_csv('X_train.csv') 
 y_train = pd.read_csv('y_train.csv')  
-test = pd.read_csv('df.csv') 
-df_final = pd.read_csv('df_final.csv')
+df_indiv = pd.read_csv('df_indiv.csv') 
+df_global = pd.read_csv('test_global.csv')
     
 #test numéro 1 : métrique banquaire 
 def bank_metric(y_true, y_pred):
@@ -33,7 +33,7 @@ def transform_treshold(df, tresh):
     return new_df
 
 def test_transform_treshold():
-    assert transform_treshold(df_final['y_proba'].iloc[1], 0.25) == 1
+    assert transform_treshold(df_global['y_proba'].iloc[1], 0.25) == 1
     
     
 
@@ -49,4 +49,4 @@ def predict_bank(X, model):
     return y_pred
 
 def test_predict_bank():
-    assert predict_bank(test, model) == 1
+    assert predict_bank(df_indiv, model) == 1
