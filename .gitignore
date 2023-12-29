@@ -19,3 +19,5 @@ config.toml
 .vscode
 .pytest_cache
 Projet7.code-workspace
+X_train.csv
+shap_local.csv
