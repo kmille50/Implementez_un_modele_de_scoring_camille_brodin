@@ -6,7 +6,6 @@ import requests
 import json
 import numpy as np
 import plotly.express as px
-from shap import waterfall_plot
 
 
 url = "http://127.0.0.1:8000/predict"
@@ -20,14 +19,14 @@ with header:
        st.text("Dashboard interactif pour plus de transparence sur les décisions d'octroi de crédit, et mise à disposition des clients leurs informations personnelles avec exploration facilité.")
 
 with dataset:
-       st.subheader("Données client ayant servi au calcul du score")
+       st.subheader("Données client ayant servies au calcul du score")
        st.text("Ce dataset est disponible a cette adresse: https://www.kaggle.com/competitions/home-credit-default-risk/data")
        
        clients_data = pd.read_csv('X_tr.csv')     
        id = st.selectbox("Identifiant client:", clients_data['SK_ID_CURR'].unique())
        st.write(clients_data.loc[clients_data['SK_ID_CURR'] == id])
        
-       st.subheader("Données client ayant influencé son score")
+       st.subheader("Données client ayant influencées son score")
        shap_local = pd.read_csv('shap_local.csv')     
        chart_data = pd.DataFrame(shap_local.loc[shap_local['SK_ID_CURR'] == id], columns=shap_local.columns)
        chart_data = chart_data.drop(columns=['SK_ID_CURR', 'TARGET']).T
@@ -69,7 +68,7 @@ with model_training:
        
        DAYS_BIRTH = st.number_input('DAYS_BIRTH', min_value=21., max_value=70., value=44., step=1.)
        DAYS_EMPLOYED = st.number_input('DAYS_EMPLOYED', min_value=0., max_value=18000., value=2395., step=1.)
-       CREDIT_TERM = st.number_input('CREDIT_TERM', min_value=0., max_value = 1., value=0.05, step=0.1)
+       CREDIT_TERM = st.number_input('CREDIT_TERM', min_value=0., max_value = 100., value=0.05, step=0.1)
        CREDIT_INCOME_PERCENT = st.number_input('CREDIT_INCOME_PERCENT', min_value=0., max_value =40., value=4., step=1.)
        EXT_SOURCE_1 = st.number_input('EXT_SOURCE_1', min_value=0., max_value =1., value=0.5, step=0.1)
        EXT_SOURCE_2 = st.number_input('EXT_SOURCE_2', min_value=0., max_value =1., value=0.5, step=0.1)
